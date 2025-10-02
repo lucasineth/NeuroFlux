@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block 'body' %}
+<div class="relative isolate bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
+    <svg class="pointer-events-none absolute inset-x-0 top-0 -z-50 h-[40rem] w-full stroke-gray-200 [mask-image:radial-gradient(32rem_32rem_at_center,white,transparent)]" aria-hidden="true">
+        <defs>
+            <pattern id="bg-pattern" width="200" height="200" patternUnits="userSpaceOnUse">
+                <path d="M0 200V0H200" fill="none" />
+            </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#bg-pattern)" />
+    </svg>
+
+    <div class="py-10">
+        <div class="mx-auto max-w-3xl px-6 lg:px-0 flex flex-col items-center gap-4">
+            <img class="size-20 rounded-full shadow-lg border-4 border-indigo-200" src="{{ paciente.foto.url }}" alt="Foto de {{ paciente.nome }}">
+            <h1 class="text-4xl font-bold text-gray-800">{{ paciente.nome }}</h1>
+            <div class="flex gap-2">
+                <span class="inline-flex items-center rounded-md bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">{{ total_consultas }} sessões realizadas</span>
+                <span class="inline-flex items-center rounded-md bg-red-100 px-3 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-700/10">2 Faltas</span>
+            </div>
+            <form action="#" method="POST" class="flex gap-2 w-full justify-center mt-2">
+                <select name="pagamento_em_dia" class="rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 focus:outline-indigo-600">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                </select>
+                <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-indigo-600">Atualizar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg max-w-7xl mx-auto px-8 py-10 mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <div class="col-span-1">
+                <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Registrar consulta</h2>
+                <form action="{% url 'paciente_view' paciente.id %}" method="POST" enctype="multipart/form-data" class="space-y-4">{% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Humor paciente</label>
+                        <input type="range" name="humor" min="1" max="5" value="1" class="w-full accent-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Registro geral</label>
+                        <textarea name="registro_geral" rows="3" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Gravação</label>
+                        <input type="file" required name="video" class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600">Exercícios</label>
+                        <select name="tarefas" multiple class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">RPD</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus:outline-indigo-600">Registrar consulta</button>
+                </form>
+            </div>
+            <!-- Histórico de Consultas -->
+            <div class="col-span-1">
+                <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Histórico</h2>
+                <ul class="divide-y divide-gray-200 bg-indigo-50 rounded-lg shadow">
+                    <li class="flex items-center justify-between py-4 px-4">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="rounded-full bg-green-400/10 text-green-400 p-1">
+                                    <span class="size-2 rounded-full bg-current"></span>
+                                </span>
+                                <span class="font-semibold text-gray-800">30/02/20024</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Link aqui | 0 - 0</div>
+                        </div>
+                        <a href="#" class="flex items-center gap-1 text-red-500 hover:text-red-700">
+                            <span class="rounded bg-red-100 px-2 py-1 text-xs font-medium">Excluir</span>
+                            <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </li>
+                    <!-- Adicione outros registros aqui -->
+                </ul>
+            </div>
+            <!-- Gráfico -->
+            <div class="col-span-1 flex flex-col items-center justify-center">
+                <h2 class="text-2xl font-semibold text-indigo-700 mb-4">Progresso</h2>
+                <canvas id="myChart" class="w-full h-64"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock 'body' %}
